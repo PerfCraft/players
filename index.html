@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GreenStone · Server Status</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f5f7;
+      --card: #ffffff;
+      --card-inner: #f5f5f7;
+      --text-primary: #1d1d1f;
+      --text-secondary: #6e6e73;
+      --text-tertiary: #a1a1a6;
+      --border: rgba(0,0,0,0.08);
+      --blue: #007aff;
+      --green: #34c759;
+      --orange: #ff9f0a;
+      --red: #ff3b30;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #000000;
+        --card: #1c1c1e;
+        --card-inner: #2c2c2e;
+        --text-primary: #f5f5f7;
+        --text-secondary: #98989d;
+        --text-tertiary: #636366;
+        --border: rgba(255,255,255,0.08);
+      }
+    }
+
+    html, body {
+      min-height: 100vh;
+      background: var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Arial, sans-serif;
+      color: var(--text-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .header-eyebrow {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 0.5rem;
+    }
+    .header-title {
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      line-height: 1.05;
+    }
+    .header-sub {
+      font-size: 17px;
+      color: var(--text-secondary);
+      margin-top: 0.4rem;
+      font-weight: 400;
+    }
+
+    /* Main card */
+    .card {
+      background: var(--card);
+      border-radius: 20px;
+      border: 0.5px solid var(--border);
+      padding: 2rem;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.06);
+    }
+
+    /* Status pill */
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--card-inner);
+      border-radius: 99px;
+      padding: 6px 14px 6px 10px;
+      margin-bottom: 1.75rem;
+    }
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      flex-shrink: 0;
+    }
+    .status-dot.offline { background: var(--red); }
+    .status-dot.online { animation: breathe 2.2s ease-in-out infinite; }
+    @keyframes breathe {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.55; transform: scale(0.85); }
+    }
+    .status-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+
+    /* Divider */
+    .divider {
+      height: 0.5px;
+      background: var(--border);
+      margin: 0 0 1.75rem;
+    }
+
+    /* Metrics grid */
+    .metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-bottom: 1.5rem;
+    }
+    .metric {
+      background: var(--card-inner);
+      border-radius: 14px;
+      padding: 16px;
+    }
+    .metric-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+      margin-bottom: 8px;
+    }
+    .metric-value {
+      font-size: 36px;
+      font-weight: 300;
+      letter-spacing: -1.5px;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+
+    /* Progress */
+    .progress-section {
+      margin-bottom: 1.75rem;
+    }
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
+    }
+    .progress-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+    .progress-pct {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .track {
+      height: 5px;
+      background: var(--card-inner);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .fill {
+      height: 100%;
+      border-radius: 99px;
+      background: var(--blue);
+      width: 0%;
+      transition: none;
+    }
+    .fill.medium { background: var(--orange); }
+    .fill.high   { background: var(--red); }
+
+    /* Footer row */
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .last-updated {
+      font-size: 12px;
+      color: var(--text-tertiary);
+    }
+    .refresh-btn {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--blue);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      padding: 0;
+      transition: opacity 0.15s;
+    }
+    .refresh-btn:hover { opacity: 0.65; }
+    .refresh-btn:active { opacity: 0.4; }
+
+    /* Footer text */
+    .page-footer {
+      margin-top: 2rem;
+      font-size: 12px;
+      color: var(--text-tertiary);
+      text-align: center;
+    }
+    .page-footer a {
+      color: var(--blue);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-eyebrow">SA·MP Roleplay</div>
+    <div class="header-title">GreenStone</div>
+    <div class="header-sub">Status server în timp real</div>
+  </div>
+
+  <div class="card">
+
+    <div class="status-pill">
+      <div class="status-dot" id="dot"></div>
+      <div class="status-label" id="status-label">Se încarcă…</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="metrics">
+      <div class="metric">
+        <div class="metric-label">Online acum</div>
+        <div class="metric-value" id="players">—</div>
+      </div>
+      <div class="metric">
+        <div class="metric-label">Capacitate</div>
+        <div class="metric-value" id="maxplayers">—</div>
+      </div>
+    </div>
+
+    <div class="progress-section">
+      <div class="progress-header">
+        <span class="progress-title">Ocupare server</span>
+        <span class="progress-pct" id="pct-label">—</span>
+      </div>
+      <div class="track">
+        <div class="fill" id="fill"></div>
+      </div>
+    </div>
+
+    <div class="footer-row">
+      <div class="last-updated" id="last-updated">—</div>
+      <button class="refresh-btn" onclick="fetchStatus()">Actualizează</button>
+    </div>
+
+  </div>
+
+  <div class="page-footer">
+    Date preluate de la <a href="https://api.g-stone.ro/samp/" target="_blank">api.g-stone.ro</a> · actualizare automată la 1s
+  </div>
+
+  <script>
+    // allorigins JSONP — works from file:// because it's a <script> tag, not fetch()
+    const TARGET = encodeURIComponent('https://api.g-stone.ro/samp/');
+    const JSONP_URL = 'https://api.allorigins.win/get?callback=__gsCallback&url=' + TARGET;
+
+    let timer = null;
+
+    function applyData(data) {
+      const online  = data.status === 1;
+      const players = data.players    ?? 0;
+      const max     = data.maxplayers ?? 1;
+      const pct     = Math.round((players / max) * 100);
+
+      const dot = document.getElementById('dot');
+      dot.className = 'status-dot ' + (online ? 'online' : 'offline');
+      document.getElementById('status-label').textContent  = online ? 'Server online' : 'Server offline';
+      document.getElementById('players').textContent       = players;
+      document.getElementById('maxplayers').textContent    = max;
+      document.getElementById('pct-label').textContent     = pct + '%';
+
+      const fill = document.getElementById('fill');
+      fill.style.width = pct + '%';
+      fill.className   = 'fill' + (pct >= 80 ? ' high' : pct >= 50 ? ' medium' : '');
+
+      const t = new Date();
+      document.getElementById('last-updated').textContent =
+        'Actualizat la ' + t.toLocaleTimeString('ro-RO', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
+    }
+
+    // Global JSONP callback
+    window.__gsCallback = function(response) {
+      try {
+        const raw  = response.contents;
+        const json = raw.match(/\{[^}]+\}/)?.[0];
+        if (!json) throw new Error('parse');
+        applyData(JSON.parse(json));
+      } catch(e) {
+        document.getElementById('dot').className            = 'status-dot offline';
+        document.getElementById('status-label').textContent = 'Eroare de conexiune';
+      }
+      // Remove old script tag
+      const old = document.getElementById('__gs_script');
+      if (old) old.remove();
+      // Schedule next
+      timer = setTimeout(fetchStatus, 1000);
+    };
+
+    function fetchStatus() {
+      const old = document.getElementById('__gs_script');
+      if (old) old.remove();
+      const s = document.createElement('script');
+      s.id  = '__gs_script';
+      s.src = JSONP_URL + '&_=' + Date.now();
+      s.onerror = function() {
+        document.getElementById('dot').className            = 'status-dot offline';
+        document.getElementById('status-label').textContent = 'Eroare de conexiune';
+        s.remove();
+        timer = setTimeout(fetchStatus, 1000);
+      };
+      document.head.appendChild(s);
+    }
+
+    fetchStatus();
+  </script>
+
+</body>
+</html>
