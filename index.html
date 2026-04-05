@@ -188,6 +188,35 @@
     .fill.medium { background: var(--orange); }
     .fill.high   { background: var(--red); }
 
+    /* Meta row (ping + uptime) */
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0;
+    }
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .meta-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--text-tertiary);
+    }
+    .meta-value {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      font-variant-numeric: tabular-nums;
+    }
+    .meta-value.ping-good  { color: var(--green);  }
+    .meta-value.ping-ok    { color: var(--orange); }
+    .meta-value.ping-bad   { color: var(--red);    }
+
     /* Footer row */
     .footer-row {
       display: flex;
@@ -263,10 +292,17 @@
       </div>
     </div>
 
-    <div class="footer-row">
-      <div class="last-updated" id="last-updated">—</div>
-      <button class="refresh-btn" onclick="fetchStatus()">Actualizează</button>
+    <div class="meta-row">
+      <div class="meta-item">
+        <span class="meta-label">Ping API</span>
+        <span class="meta-value" id="ping-api">—</span>
+      </div>
+
     </div>
+
+    <div class="divider" style="margin:1.25rem 0 1.25rem;"></div>
+
+    <div class="last-updated" id="last-updated">—</div>
 
   </div>
 
@@ -275,20 +311,53 @@
   </div>
 
   <script>
-    // allorigins JSONP — works from file:// because it's a <script> tag, not fetch()
-    const TARGET = encodeURIComponent('https://api.g-stone.ro/samp/');
-    const JSONP_URL = 'https://api.allorigins.win/get?callback=__gsCallback&url=' + TARGET;
+    const API = 'https://api.g-stone.ro/samp/';
 
-    let timer = null;
+    const PROXIES = [
+      u => `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}&_=${Date.now()}`,
+      u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}&_=${Date.now()}`,
+      u => `https://corsproxy.io/?url=${encodeURIComponent(u)}`,
+      u => `https://thingproxy.freeboard.io/fetch/${u}`,
+    ];
+    let pi = 0;
 
-    function applyData(data) {
+    function setPing(elId, ms) {
+      const el = document.getElementById(elId);
+      if (ms === null) { el.textContent = 'timeout'; el.className = 'meta-value ping-bad'; return; }
+      el.textContent = ms + ' ms';
+      el.className   = 'meta-value' + (ms < 150 ? ' ping-good' : ms < 400 ? ' ping-ok' : ' ping-bad');
+    }
+
+    async function pingUrl(url, timeoutMs) {
+      const ctrl = new AbortController();
+      const tid  = setTimeout(() => ctrl.abort(), timeoutMs);
+      const t0   = Date.now();
+      try {
+        await fetch(url, { mode: 'no-cors', cache: 'no-store', signal: ctrl.signal });
+        return Date.now() - t0;
+      } catch(e) {
+        return null;
+      } finally {
+        clearTimeout(tid);
+      }
+    }
+
+    async function measurePings() {
+      const [apiMs, srvMs] = await Promise.all([
+        pingUrl('https://api.g-stone.ro/samp/', 3000),
+        pingUrl('http://' + SERVER_IP + ':7777', 3000),
+      ]);
+      setPing('ping-api', apiMs);
+      setPing('ping-srv', srvMs);
+    }
+
+    function render(data, pingMs) {
       const online  = data.status === 1;
       const players = data.players    ?? 0;
       const max     = data.maxplayers ?? 1;
       const pct     = Math.round((players / max) * 100);
 
-      const dot = document.getElementById('dot');
-      dot.className = 'status-dot ' + (online ? 'online' : 'offline');
+      document.getElementById('dot').className             = 'status-dot ' + (online ? 'online' : 'offline');
       document.getElementById('status-label').textContent  = online ? 'Server online' : 'Server offline';
       document.getElementById('players').textContent       = players;
       document.getElementById('maxplayers').textContent    = max;
@@ -303,40 +372,37 @@
         'Actualizat la ' + t.toLocaleTimeString('ro-RO', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
     }
 
-    // Global JSONP callback
-    window.__gsCallback = function(response) {
-      try {
-        const raw  = response.contents;
-        const json = raw.match(/\{[^}]+\}/)?.[0];
-        if (!json) throw new Error('parse');
-        applyData(JSON.parse(json));
-      } catch(e) {
-        document.getElementById('dot').className            = 'status-dot offline';
-        document.getElementById('status-label').textContent = 'Eroare de conexiune';
-      }
-      // Remove old script tag
-      const old = document.getElementById('__gs_script');
-      if (old) old.remove();
-      // Schedule next
-      timer = setTimeout(fetchStatus, 1000);
-    };
+    async function tryProxy(index) {
+      const url = PROXIES[index](API);
+      const res = await fetch(url, { cache: 'no-store' });
+      if (!res.ok) throw new Error(res.status);
+      const text = await res.text();
+      const match = text.match(/\{[^}]+\}/);
+      if (!match) throw new Error('parse');
+      return JSON.parse(match[0]);
+    }
 
-    function fetchStatus() {
-      const old = document.getElementById('__gs_script');
-      if (old) old.remove();
-      const s = document.createElement('script');
-      s.id  = '__gs_script';
-      s.src = JSONP_URL + '&_=' + Date.now();
-      s.onerror = function() {
-        document.getElementById('dot').className            = 'status-dot offline';
-        document.getElementById('status-label').textContent = 'Eroare de conexiune';
-        s.remove();
-        timer = setTimeout(fetchStatus, 1000);
-      };
-      document.head.appendChild(s);
+
+    async function fetchStatus() {
+      for (let i = 0; i < PROXIES.length; i++) {
+        try {
+          const data = await tryProxy((pi + i) % PROXIES.length);
+          pi = (pi + i) % PROXIES.length;
+          render(data);
+          break;
+        } catch(e) {
+          if (i === PROXIES.length - 1) {
+            document.getElementById('dot').className            = 'status-dot offline';
+            document.getElementById('status-label').textContent = 'Eroare de conexiune';
+            document.getElementById('last-updated').textContent = 'Toate proxy-urile au eșuat';
+          }
+        }
+      }
+      pingUrl('https://api.g-stone.ro/samp/', 3000).then(ms => setPing('ping-api', ms));
     }
 
     fetchStatus();
+    setInterval(fetchStatus, 1000);
   </script>
 
 </body>
