@@ -8,28 +8,28 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #f5f5f7;
-      --card: #ffffff;
-      --card-inner: #f5f5f7;
-      --text-primary: #1d1d1f;
-      --text-secondary: #6e6e73;
+      --bg:            #f5f5f7;
+      --card:          #ffffff;
+      --card-inner:    #f5f5f7;
+      --text-primary:  #1d1d1f;
+      --text-secondary:#6e6e73;
       --text-tertiary: #a1a1a6;
-      --border: rgba(0,0,0,0.08);
-      --blue: #007aff;
-      --green: #34c759;
-      --orange: #ff9f0a;
-      --red: #ff3b30;
+      --border:        rgba(0,0,0,0.08);
+      --blue:          #007aff;
+      --green:         #34c759;
+      --orange:        #ff9f0a;
+      --red:           #ff3b30;
     }
 
     @media (prefers-color-scheme: dark) {
       :root {
-        --bg: #000000;
-        --card: #1c1c1e;
-        --card-inner: #2c2c2e;
-        --text-primary: #f5f5f7;
-        --text-secondary: #98989d;
+        --bg:            #000000;
+        --card:          #1c1c1e;
+        --card-inner:    #2c2c2e;
+        --text-primary:  #f5f5f7;
+        --text-secondary:#98989d;
         --text-tertiary: #636366;
-        --border: rgba(255,255,255,0.08);
+        --border:        rgba(255,255,255,0.08);
       }
     }
 
@@ -50,34 +50,20 @@
       padding: 2rem 1rem;
     }
 
-    /* Header */
-    .header {
-      text-align: center;
-      margin-bottom: 2.5rem;
-    }
+    .header { text-align: center; margin-bottom: 2.5rem; }
     .header-eyebrow {
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: var(--blue);
-      margin-bottom: 0.5rem;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--blue); margin-bottom: 0.5rem;
     }
     .header-title {
-      font-size: 42px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      color: var(--text-primary);
-      line-height: 1.05;
+      font-size: 42px; font-weight: 700; letter-spacing: -0.03em;
+      color: var(--text-primary); line-height: 1.05;
     }
     .header-sub {
-      font-size: 17px;
-      color: var(--text-secondary);
-      margin-top: 0.4rem;
-      font-weight: 400;
+      font-size: 17px; color: var(--text-secondary);
+      margin-top: 0.4rem; font-weight: 400;
     }
 
-    /* Main card */
     .card {
       background: var(--card);
       border-radius: 20px;
@@ -85,173 +71,65 @@
       padding: 2rem;
       width: 100%;
       max-width: 420px;
-      box-shadow: 0 2px 20px rgba(0,0,0,0.06);
     }
 
-    /* Status pill */
     .status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: var(--card-inner);
-      border-radius: 99px;
-      padding: 6px 14px 6px 10px;
-      margin-bottom: 1.75rem;
+      display: inline-flex; align-items: center; gap: 7px;
+      background: var(--card-inner); border-radius: 99px;
+      padding: 6px 14px 6px 10px; margin-bottom: 1.75rem;
     }
     .status-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--green);
-      flex-shrink: 0;
+      width: 9px; height: 9px; border-radius: 50%;
+      background: var(--green); flex-shrink: 0;
     }
-    .status-dot.offline { background: var(--red); }
-    .status-dot.online { animation: breathe 2.2s ease-in-out infinite; }
+    .status-dot.offline { background: var(--red); animation: none; }
+    .status-dot.online  { animation: breathe 2.2s ease-in-out infinite; }
     @keyframes breathe {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.55; transform: scale(0.85); }
+      50%       { opacity: 0.55; transform: scale(0.85); }
     }
-    .status-label {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-primary);
-    }
+    .status-label { font-size: 13px; font-weight: 500; color: var(--text-primary); }
 
-    /* Divider */
-    .divider {
-      height: 0.5px;
-      background: var(--border);
-      margin: 0 0 1.75rem;
-    }
+    .divider { height: 0.5px; background: var(--border); margin: 0 0 1.75rem; }
 
-    /* Metrics grid */
-    .metrics {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 1.5rem;
-    }
-    .metric {
-      background: var(--card-inner);
-      border-radius: 14px;
-      padding: 16px;
-    }
+    .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.5rem; }
+    .metric  { background: var(--card-inner); border-radius: 14px; padding: 16px; }
     .metric-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-      margin-bottom: 8px;
+      font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+      text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 8px;
     }
     .metric-value {
-      font-size: 36px;
-      font-weight: 300;
-      letter-spacing: -1.5px;
-      color: var(--text-primary);
-      line-height: 1;
+      font-size: 36px; font-weight: 300; letter-spacing: -1.5px;
+      color: var(--text-primary); line-height: 1;
     }
 
-    /* Progress */
-    .progress-section {
-      margin-bottom: 1.75rem;
-    }
-    .progress-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 8px;
-    }
-    .progress-title {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-secondary);
-    }
-    .progress-pct {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-primary);
-    }
-    .track {
-      height: 5px;
-      background: var(--card-inner);
-      border-radius: 99px;
-      overflow: hidden;
-    }
-    .fill {
-      height: 100%;
-      border-radius: 99px;
-      background: var(--blue);
-      width: 0%;
-      transition: none;
-    }
+    .progress-section { margin-bottom: 1.75rem; }
+    .progress-header  { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .progress-title   { font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+    .progress-pct     { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+    .track { height: 5px; background: var(--card-inner); border-radius: 99px; overflow: hidden; }
+    .fill  { height: 100%; border-radius: 99px; background: var(--blue); width: 0%; }
     .fill.medium { background: var(--orange); }
     .fill.high   { background: var(--red); }
 
-    /* Meta row (ping + uptime) */
-    .meta-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0;
-    }
-    .meta-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
+    .meta-row  { display: flex; align-items: center; margin-bottom: 1.25rem; }
+    .meta-item { display: flex; align-items: center; gap: 6px; }
     .meta-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      color: var(--text-tertiary);
+      font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+      text-transform: uppercase; color: var(--text-tertiary);
     }
     .meta-value {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--text-secondary);
-      font-variant-numeric: tabular-nums;
+      font-size: 13px; font-weight: 500;
+      color: var(--text-secondary); font-variant-numeric: tabular-nums;
     }
-    .meta-value.ping-good  { color: var(--green);  }
-    .meta-value.ping-ok    { color: var(--orange); }
-    .meta-value.ping-bad   { color: var(--red);    }
+    .meta-value.ping-good { color: var(--green); }
+    .meta-value.ping-ok   { color: var(--orange); }
+    .meta-value.ping-bad  { color: var(--red); }
 
-    /* Footer row */
-    .footer-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .last-updated {
-      font-size: 12px;
-      color: var(--text-tertiary);
-    }
-    .refresh-btn {
-      font-size: 13px;
-      font-weight: 500;
-      color: var(--blue);
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-family: inherit;
-      padding: 0;
-      transition: opacity 0.15s;
-    }
-    .refresh-btn:hover { opacity: 0.65; }
-    .refresh-btn:active { opacity: 0.4; }
+    .last-updated { font-size: 12px; color: var(--text-tertiary); }
 
-    /* Footer text */
-    .page-footer {
-      margin-top: 2rem;
-      font-size: 12px;
-      color: var(--text-tertiary);
-      text-align: center;
-    }
-    .page-footer a {
-      color: var(--blue);
-      text-decoration: none;
-    }
+    .page-footer { margin-top: 2rem; font-size: 12px; color: var(--text-tertiary); text-align: center; }
+    .page-footer a { color: var(--blue); text-decoration: none; }
   </style>
 </head>
 <body>
@@ -263,7 +141,6 @@
   </div>
 
   <div class="card">
-
     <div class="status-pill">
       <div class="status-dot" id="dot"></div>
       <div class="status-label" id="status-label">Se încarcă…</div>
@@ -297,13 +174,9 @@
         <span class="meta-label">Ping API</span>
         <span class="meta-value" id="ping-api">—</span>
       </div>
-
     </div>
 
-    <div class="divider" style="margin:1.25rem 0 1.25rem;"></div>
-
     <div class="last-updated" id="last-updated">—</div>
-
   </div>
 
   <div class="page-footer">
@@ -313,96 +186,132 @@
   <script>
     const API = 'https://api.g-stone.ro/samp/';
 
-    const PROXIES = [
-      u => `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(u)}&_=${Date.now()}`,
-      u => `https://api.allorigins.win/raw?url=${encodeURIComponent(u)}&_=${Date.now()}`,
-      u => `https://corsproxy.io/?url=${encodeURIComponent(u)}`,
-      u => `https://thingproxy.freeboard.io/fetch/${u}`,
-    ];
-    let pi = 0;
 
-    function setPing(elId, ms) {
-      const el = document.getElementById(elId);
-      if (ms === null) { el.textContent = 'timeout'; el.className = 'meta-value ping-bad'; return; }
-      el.textContent = ms + ' ms';
-      el.className   = 'meta-value' + (ms < 150 ? ' ping-good' : ms < 400 ? ' ping-ok' : ' ping-bad');
+
+    // Cache DOM refs once — no repeated getElementById
+    const els = {
+      dot:     document.getElementById('dot'),
+      label:   document.getElementById('status-label'),
+      players: document.getElementById('players'),
+      maxp:    document.getElementById('maxplayers'),
+      pct:     document.getElementById('pct-label'),
+      fill:    document.getElementById('fill'),
+      ping:    document.getElementById('ping-api'),
+      updated: document.getElementById('last-updated'),
+    };
+
+    let backoff = 1000;
+    let timer;
+    let prev = {};
+
+    // Fetch via codetabs (works from both file:// and https://)
+    function fetchCodetabs() {
+      return new Promise((resolve, reject) => {
+        const url = `https://api.codetabs.com/v1/proxy/?quest=${encodeURIComponent(API)}&_=${Date.now()}`;
+        const t0  = Date.now();
+        fetch(url, { cache: 'no-store' })
+          .then(r => { if (!r.ok) throw new Error(r.status); return r.text(); })
+          .then(text => {
+            const match = text.match(/\{[^}]+\}/);
+            if (!match) throw new Error('parse');
+            resolve({ data: JSON.parse(match[0]), ms: Date.now() - t0 });
+          })
+          .catch(reject);
+      });
     }
 
-    async function pingUrl(url, timeoutMs) {
-      const ctrl = new AbortController();
-      const tid  = setTimeout(() => ctrl.abort(), timeoutMs);
-      const t0   = Date.now();
-      try {
-        await fetch(url, { mode: 'no-cors', cache: 'no-store', signal: ctrl.signal });
-        return Date.now() - t0;
-      } catch(e) {
-        return null;
-      } finally {
-        clearTimeout(tid);
-      }
+    // JSONP fallback via allorigins — works from file:// (script tag, not fetch)
+    function fetchJSONP() {
+      return new Promise((resolve, reject) => {
+        const t0  = Date.now();
+        const cb  = '__gs_' + Date.now();
+        const url = `https://api.allorigins.win/get?callback=${cb}&url=${encodeURIComponent(API)}`;
+        const s   = document.createElement('script');
+        const tid = setTimeout(() => { cleanup(); reject(new Error('timeout')); }, 5000);
+        function cleanup() { clearTimeout(tid); delete window[cb]; s.remove(); }
+        window[cb] = (res) => {
+          cleanup();
+          try {
+            const match = res.contents.match(/\{[^}]+\}/);
+            if (!match) throw new Error('parse');
+            resolve({ data: JSON.parse(match[0]), ms: Date.now() - t0 });
+          } catch(e) { reject(e); }
+        };
+        s.onerror = () => { cleanup(); reject(new Error('script_err')); };
+        s.src = url;
+        document.head.appendChild(s);
+      });
     }
 
-    async function measurePings() {
-      const [apiMs, srvMs] = await Promise.all([
-        pingUrl('https://api.g-stone.ro/samp/', 3000),
-        pingUrl('http://' + SERVER_IP + ':7777', 3000),
-      ]);
-      setPing('ping-api', apiMs);
-      setPing('ping-srv', srvMs);
+    async function fetchWithFallback() {
+      try   { return await fetchCodetabs(); }
+      catch { return await fetchJSONP(); }
     }
 
-    function render(data, pingMs) {
+    // On boot: just try codetabs first, JSONP is automatic fallback
+    async function detectBestProxy() { /* no-op — single proxy strategy */ }
+
+    // Helpers: only touch DOM if value actually changed
+    function setText(el, val)  { if (el.textContent !== String(val)) el.textContent = val; }
+    function setCls(el, cls)   { if (el.className   !== cls)         el.className   = cls; }
+
+    function render({ data, ms }) {
       const online  = data.status === 1;
       const players = data.players    ?? 0;
       const max     = data.maxplayers ?? 1;
       const pct     = Math.round((players / max) * 100);
 
-      document.getElementById('dot').className             = 'status-dot ' + (online ? 'online' : 'offline');
-      document.getElementById('status-label').textContent  = online ? 'Server online' : 'Server offline';
-      document.getElementById('players').textContent       = players;
-      document.getElementById('maxplayers').textContent    = max;
-      document.getElementById('pct-label').textContent     = pct + '%';
-
-      const fill = document.getElementById('fill');
-      fill.style.width = pct + '%';
-      fill.className   = 'fill' + (pct >= 80 ? ' high' : pct >= 50 ? ' medium' : '');
-
-      const t = new Date();
-      document.getElementById('last-updated').textContent =
-        'Actualizat la ' + t.toLocaleTimeString('ro-RO', { hour:'2-digit', minute:'2-digit', second:'2-digit' });
-    }
-
-    async function tryProxy(index) {
-      const url = PROXIES[index](API);
-      const res = await fetch(url, { cache: 'no-store' });
-      if (!res.ok) throw new Error(res.status);
-      const text = await res.text();
-      const match = text.match(/\{[^}]+\}/);
-      if (!match) throw new Error('parse');
-      return JSON.parse(match[0]);
-    }
-
-
-    async function fetchStatus() {
-      for (let i = 0; i < PROXIES.length; i++) {
-        try {
-          const data = await tryProxy((pi + i) % PROXIES.length);
-          pi = (pi + i) % PROXIES.length;
-          render(data);
-          break;
-        } catch(e) {
-          if (i === PROXIES.length - 1) {
-            document.getElementById('dot').className            = 'status-dot offline';
-            document.getElementById('status-label').textContent = 'Eroare de conexiune';
-            document.getElementById('last-updated').textContent = 'Toate proxy-urile au eșuat';
-          }
-        }
+      if (prev.online !== online) {
+        setCls(els.dot,  'status-dot ' + (online ? 'online' : 'offline'));
+        setText(els.label, online ? 'Server online' : 'Server offline');
+        prev.online = online;
       }
-      pingUrl('https://api.g-stone.ro/samp/', 3000).then(ms => setPing('ping-api', ms));
+      if (prev.players !== players) { setText(els.players, players); prev.players = players; }
+      if (prev.max     !== max)     { setText(els.maxp, max);        prev.max     = max;     }
+      if (prev.pct     !== pct) {
+        setText(els.pct, pct + '%');
+        els.fill.style.width = pct + '%';
+        setCls(els.fill, 'fill' + (pct >= 80 ? ' high' : pct >= 50 ? ' medium' : ''));
+        prev.pct = pct;
+      }
+
+      // Ping always updates (changes every tick)
+      setText(els.ping, ms + ' ms');
+      setCls(els.ping, 'meta-value' + (ms < 150 ? ' ping-good' : ms < 400 ? ' ping-ok' : ' ping-bad'));
+
+      setText(els.updated, 'Actualizat la ' +
+        new Date().toLocaleTimeString('ro-RO', { hour:'2-digit', minute:'2-digit', second:'2-digit' }));
+
+      backoff = 1000; // reset backoff on success
     }
 
-    fetchStatus();
-    setInterval(fetchStatus, 1000);
+    function showError() {
+      setCls(els.dot,   'status-dot offline');
+      setText(els.label, 'Eroare de conexiune');
+    }
+
+    // Recursive setTimeout — no overlap, adjusts for request duration
+    function schedule(ms) { clearTimeout(timer); timer = setTimeout(loop, ms); }
+
+    async function loop() {
+      if (document.hidden) { schedule(1000); return; } // don't fetch when tab is hidden
+      try {
+        render(await fetchWithFallback());
+        schedule(1000);
+      } catch(e) {
+        showError();
+        backoff = Math.min(backoff * 2, 30000); // exponential backoff, max 30s
+        schedule(backoff);
+      }
+    }
+
+    // Resume immediately when tab becomes visible again
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) { clearTimeout(timer); loop(); }
+    });
+
+    // Boot
+    detectBestProxy().finally(loop);
   </script>
 
 </body>
